@@ -1,6 +1,12 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+public enum PlayerState
+{
+    Nornal , 
+    pickUp,
+}
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Animator animator;
@@ -16,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
     private CharacterController controller;
     private float verticalVelocity;
+    private PlayerState curentState = PlayerState.Nornal;
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -23,7 +30,7 @@ public class PlayerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -31,11 +38,18 @@ public class PlayerController : MonoBehaviour
     {
         Keyboard keyboard = Keyboard.current;
 
-        if(keyboard == null)
+        if (keyboard == null)
         {
             return;
         }
 
+        ApplyGravity();
+        if (curentState != PlayerState.Nornal) return;
+
+        HandleMovement(keyboard);
+    }
+    private void HandleMovement(Keyboard keyboard)
+    {
         Vector2 input = Vector2.zero;
 
         if (keyboard.aKey.isPressed)
@@ -48,4 +62,17 @@ public class PlayerController : MonoBehaviour
             input.y += 1f;
         input = Vector2.ClampMagnitude(input, 1f);
     }
+    private void ApplyGravity()
+    {
+        if (controller.isGrounded && verticalVelocity < 0f)
+        {
+            verticalVelocity -= -2f;
+        }
+        else
+        {
+            verticalVelocity = -2f;
+        }
+        controller.Move(Vector3.up * verticalVelocity * Time.deltaTime);
+    }
+    
 }
