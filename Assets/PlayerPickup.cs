@@ -13,6 +13,8 @@ public class PlayerPickup : MonoBehaviour
     [SerializeField] private float pickupMoment = 0.55f;
 
     private PickupItem targetItem;
+    private Door targetDoor;
+    private NPC targetNPC;
     private bool isPickingUp;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -29,5 +31,13 @@ public class PlayerPickup : MonoBehaviour
     private PickupItem FindClosestItem()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, detectionRadius, ~0,QueryTriggerInteraction.Collide)
+    }
+    public string GetlitemName()
+    {
+        return itemName;
+    }
+    private Door FindClosestDoor()
+    {
+        Collider[] colliders = Physics OverlapSphere(transform.position, detectionRadius, -0, QueryTriggerInteraction.Collide);
     }
 }
